@@ -1,21 +1,92 @@
 ---
 import { supabase } from "../lib/supabase";
 
-const { data, error } = await supabase
-  .from("company_info")
-  .select("*")
-  .single();
+let data = null;
+let errorMsg = null;
 
-if (error) console.error(error);
+try {
+  const { data: companyData, error } = await supabase
+    .from("company_info")
+    .select("*")
+    .single();
+
+  if (error) throw error;
+  data = companyData;
+} catch (err) {
+  errorMsg = err instanceof Error ? err.message : "Error desconocido";
+  console.error("Error fetching company info:", errorMsg);
+}
 ---
 
-<h1>{data?.nombre}</h1>
+<head>
+  <meta charset="utf-8" />
+</head>
 
-<p>{data?.direccion}</p>
-<p>{data?.telefono}</p>
-<p>{data?.mail}</p>
-<p>{data?.horario}</p>
+<main>
+  {
+    data ? (
+      <section class="company-info">
+        <div>
+          <h1>{data.nombre}</h1>
 
-<img src={data?.logo} alt="Logo empresa" width="180" />
+          <p>
+            <strong>Dirección:</strong> {data.direccion}
+          </p>
+          <p>
+            <strong>Teléfono:</strong> {data.telefono}
+          </p>
+          <p>
+            <strong>Email:</strong> {data.mail}
+          </p>
+          <p>
+            <strong>Horario:</strong> {data.horario}
+          </p>
+        </div>
+        <div>
+          {data.logo && (
+            <img src={data.logo} alt={`Logo de ${data.nombre}`} width="180" />
+          )}
+        </div>
+      </section>
+    ) : (
+      <div class="error-container">
+        <p>No se pudo cargar la información.</p>
+        {errorMsg && <small>{errorMsg}</small>}
+      </div>
+    )
+  }
+</main>
 
-<p>{data?.logo}</p>
+<style>
+  /* Tu CSS está perfecto, no necesita cambios */
+  .company-info {
+    font-family: Arial, sans-serif;
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    justify-content: space-evenly;
+    display: flex;
+  }
+
+  .company-info h1 {
+    margin-bottom: 1rem;
+  }
+
+  .company-info p {
+    margin: 0.5rem 0;
+  }
+
+  .company-info img {
+    margin-top: 1rem;
+    border-radius: 4px;
+  }
+
+  .error-container {
+    text-align: center;
+    color: #666;
+    margin-top: 2rem;
+  }
+</style>
