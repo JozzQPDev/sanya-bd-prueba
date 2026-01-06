@@ -1,0 +1,16 @@
+---
+const { message } = Astro.props;
+---
+
+<section class="error">
+  <p>No se pudo cargar la información.</p>
+  {message && <small>{message}</small>}
+</section>
+
+<style>
+  .error {
+    text-align: center;
+    color: red;
+    margin-top: 2rem;
+  }
+</style>

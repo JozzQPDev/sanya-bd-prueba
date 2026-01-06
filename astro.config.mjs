@@ -1,5 +1,7 @@
-// @ts-check
 import { defineConfig } from 'astro/config';
+import vercel from '@astrojs/vercel/serverless';
 
-// https://astro.build/config
-export default defineConfig({});
+export default defineConfig({
+  output: 'server', // Esto hace que se consulte la DB en cada visita
+  adapter: vercel(),
+});
