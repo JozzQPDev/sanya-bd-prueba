@@ -1,0 +1,242 @@
+---
+import { supabase } from "../lib/supabase";
+
+const COMPANY_ID = 1;
+
+/* Cargar datos desde Supabase (SSR) */
+const { data: company, error } = await supabase
+  .from("company_info")
+  .select("*")
+  .eq("id", COMPANY_ID)
+  .single();
+
+if (error) {
+  throw new Error("Error cargando datos de la empresa");
+}
+---
+
+<head>
+  <meta charset="utf-8" />
+  <title>Panel Empresa</title>
+</head>
+
+
+<style>
+  :root {
+    --bg: #ffffff;
+    --card: #f9fafb;
+    --text: #111111;
+    --border: #e5e7eb;
+    --primary: #000000;
+    --muted: #6b7280;
+    --radius: 14px;
+  }
+
+  body {
+    background: #f3f4f6;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 140px auto;
+    padding: 0 20px;
+    font-family: "Inter", system-ui, sans-serif;
+  }
+
+  .admin-grid {
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    gap: 40px;
+  }
+
+  /* ===== Logo ===== */
+  .logo-card {
+    background: var(--bg);
+    border-radius: var(--radius);
+    padding: 24px;
+    border: 1px solid var(--border);
+    position: sticky;
+    top: 120px;
+    text-align: center;
+  }
+
+  .logo-preview {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: var(--radius);
+    border: 1px dashed var(--border);
+    overflow: hidden;
+    margin-bottom: 20px;
+    background: var(--card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logo-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .logo-card h1 {
+    font-size: 1.4rem;
+    margin: 0;
+  }
+
+  /* ===== Form ===== */
+  .form-card {
+    background: var(--bg);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 32px;
+  }
+
+  .fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .field.full {
+    grid-column: span 2;
+  }
+
+  label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  input {
+    border: none;
+    border-bottom: 2px solid var(--border);
+    padding: 10px 4px;
+    font-size: 1rem;
+    outline: none;
+    background: transparent;
+    transition: border-color 0.2s;
+  }
+
+  input:focus {
+    border-bottom-color: var(--primary);
+  }
+
+  .btn {
+    margin-top: 30px;
+    padding: 14px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition:
+      transform 0.15s,
+      box-shadow 0.15s;
+  }
+
+  .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  @media (max-width: 900px) {
+    .admin-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .logo-card {
+      position: static;
+    }
+
+    .fields {
+      grid-template-columns: 1fr;
+    }
+
+    .field.full {
+      grid-column: span 1;
+    }
+  }
+</style>
+
+<main class="container">
+  <form id="companyForm" class="admin-grid">
+    <!-- LOGO -->
+    <div class="logo-card">
+      <div class="logo-preview">
+        {company.logo ? <img src={company.logo} /> : <span>Sin logo</span>}
+      </div>
+      <h1>{company.nombre}</h1>
+    </div>
+
+    <!-- FORM -->
+    <div class="form-card">
+      <div class="fields">
+        <div class="field">
+          <label>Nombre</label>
+          <input name="nombre" value={company.nombre} required />
+        </div>
+
+        <div class="field">
+          <label>Dirección</label>
+          <input name="direccion" value={company.direccion} required />
+        </div>
+
+        <div class="field">
+          <label>Teléfono</label>
+          <input name="telefono" value={company.telefono} required />
+        </div>
+
+        <div class="field">
+          <label>Email</label>
+          <input type="email" name="mail" value={company.mail} required />
+        </div>
+
+        <div class="field full">
+          <label>Horario</label>
+          <input name="horario" value={company.horario} required />
+        </div>
+
+        <div class="field full">
+          <label>URL del Logo</label>
+          <input name="logo" value={company.logo ?? ""} />
+        </div>
+      </div>
+
+      <button class="btn" type="submit">Guardar Cambios</button>
+    </div>
+  </form>
+
+  <script>
+    const form = document.getElementById("companyForm");
+
+    if (form instanceof HTMLFormElement) {
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const res = await fetch("/api/company/update", {
+          method: "POST",
+          body: new FormData(form),
+        });
+
+        if (res.ok) {
+          alert("✅ Datos actualizados correctamente");
+          location.reload();
+        } else {
+          alert("❌ Error al guardar");
+        }
+      });
+    }
+  </script>
+</main>

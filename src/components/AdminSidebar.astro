@@ -1,0 +1,223 @@
+---
+import { supabaseServer } from "../lib/supabaseServer";
+
+const session = Astro.cookies.get("session")?.value;
+
+const { data: user } = await supabaseServer
+  .from("users")
+  .select("role, username")
+  .eq("id", session)
+  .single();
+
+const pathname = Astro.url.pathname;
+
+// Detecta link activo (incluye subrutas)
+const isActive = (path: string) =>
+  path === "/dashboard" ? pathname === path : pathname.startsWith(path);
+---
+<!-- SIDEBAR -->
+<aside class="sidebar" aria-label="Panel administrativo">
+  <!-- HEADER -->
+  <header class="sidebar-header">
+    <div class="sidebar-brand">
+      <i data-lucide="settings"></i>
+      <h2>Admin Panel</h2>
+    </div>
+
+    <div class="user-info">
+      <span class="user-name">{user?.username ?? "Usuario"}</span>
+      <span class="user-role">
+        {user?.role === "admin" ? "Administrador" : "Usuario"}
+      </span>
+    </div>
+  </header>
+
+  <!-- NAV -->
+  <nav class="sidebar-nav">
+    <section class="nav-section">
+      <h3>Principal</h3>
+
+      <a href="/dashboard" class={`sidebar-link ${isActive("/dashboard") ? "active" : ""}`}>
+        <i data-lucide="layout-dashboard"></i>
+        <span>Dashboard</span>
+      </a>
+    </section>
+
+    <section class="nav-section">
+      <h3>Gestión</h3>
+
+      <a href="/admin/company" class={`sidebar-link ${isActive("/admin/company") ? "active" : ""}`}>
+        <i data-lucide="building-2"></i>
+        <span>Empresa</span>
+      </a>
+
+      <a href="/admin/users" class={`sidebar-link ${isActive("/admin/users") ? "active" : ""}`}>
+        <i data-lucide="users"></i>
+        <span>Usuarios</span>
+      </a>
+
+      <a href="/admin/orders" class={`sidebar-link ${isActive("/admin/orders") ? "active" : ""}`}>
+        <i data-lucide="package"></i>
+        <span>Pedidos</span>
+      </a>
+
+      <a href="/admin/reports" class={`sidebar-link ${isActive("/admin/reports") ? "active" : ""}`}>
+        <i data-lucide="bar-chart-3"></i>
+        <span>Reportes</span>
+      </a>
+    </section>
+
+    {user?.role === "admin" && (
+      <section class="nav-section">
+        <h3>Administración</h3>
+
+        <a href="/admin/settings" class={`sidebar-link ${isActive("/admin/settings") ? "active" : ""}`}>
+          <i data-lucide="settings"></i>
+          <span>Configuración</span>
+        </a>
+      </section>
+    )}
+  </nav>
+
+  <!-- FOOTER -->
+  <footer class="sidebar-footer">
+    <form method="POST" action="/api/logout">
+      <button class="logout-btn">
+        <i data-lucide="log-out"></i>
+        <span>Cerrar Sesión</span>
+      </button>
+    </form>
+  </footer>
+</aside>
+
+<style>
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 280px;
+  min-height: 100dvh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background: linear-gradient(180deg, #2c3e50, #34495e);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+/* HEADER */
+.sidebar-header {
+  padding: 22px 20px;
+  border-bottom: 1px solid #3d566e;
+}
+
+.sidebar-brand {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.sidebar-brand h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.user-info {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-size: 14px;
+}
+
+.user-role {
+  font-size: 11px;
+  color: #bdc3c7;
+  text-transform: uppercase;
+}
+
+/* NAV */
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 0;
+}
+
+.nav-section {
+  margin-bottom: 16px;
+}
+
+.nav-section h3 {
+  margin: 8px 20px;
+  font-size: 11px;
+  color: #95a5a6;
+  text-transform: uppercase;
+}
+
+/* LINKS */
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  color: #bdc3c7;
+  text-decoration: none;
+  position: relative;
+  transition: background 0.3s, color 0.3s;
+}
+
+.sidebar-link:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+
+/* ACTIVE LINK */
+.sidebar-link.active {
+  background: linear-gradient(
+    90deg,
+    rgba(26, 188, 156, 0.28),
+    rgba(26, 188, 156, 0.05)
+  );
+  color: #fff;
+}
+
+.sidebar-link.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 4px;
+  height: 100%;
+  background: #1abc9c;
+  border-radius: 0 4px 4px 0;
+}
+
+/* ICONS */
+.sidebar svg,
+.logout-btn svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 1.8;
+}
+
+/* FOOTER */
+.sidebar-footer {
+  padding: 20px;
+  border-top: 1px solid #3d566e;
+}
+
+.logout-btn {
+  width: 100%;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: #fff;
+  cursor: pointer;
+}
+</style>

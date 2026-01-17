@@ -1,0 +1,122 @@
+---
+import AdminLayout from "../layouts/AdminLayout.astro";
+import { supabaseServer } from "../lib/supabaseServer";
+
+/* Obtener ID desde la cookie (puesta en /api/login) */
+const session = Astro.cookies.get("session")?.value;
+
+/* El middleware ya protege esta ruta */
+/* Aquí solo usamos el ID */
+
+/* Obtener perfil */
+const { data: user } = await supabaseServer
+  .from("users")
+  .select("id, username, email, role")
+  .eq("id", session)
+  .single();
+---
+
+<AdminLayout>
+  <main class="dashboard-main">
+    <div class="welcome-card">
+      <h1>Bienvenido, {user?.username} 👋</h1>
+      <p class="subtitle">Panel de administración del sistema</p>
+    </div>
+
+    <div class="actions">
+      <a href="/admin/company">
+        <button class="btn primary">Editar Empresa</button>
+      </a>
+      <a href="/admin/users">
+        <button class="btn secondary">Gestionar Usuarios</button>
+      </a>
+      <form method="POST" action="/api/logout">
+        <button class="btn danger">Cerrar sesión</button>
+      </form>
+    </div>
+  </main>
+</AdminLayout>
+
+<style>
+  .dashboard-main {
+    padding: 20px;
+  }
+  .welcome-card {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+  }
+  .welcome-card h1 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+  }
+  .subtitle {
+    color: #7f8c8d;
+    font-size: 1.1em;
+  }
+  .stats {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+  }
+  .stat {
+    background: #ecf0f1;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    flex: 1;
+  }
+  .stat h3 {
+    margin: 0;
+    color: #34495e;
+  }
+  .stat p {
+    font-size: 2em;
+    margin: 10px 0 0 0;
+    color: #2c3e50;
+  }
+  .actions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background 0.3s;
+  }
+  .btn.primary {
+    background: #3498db;
+    color: white;
+  }
+  .btn.primary:hover {
+    background: #2980b9;
+  }
+  .btn.secondary {
+    background: #95a5a6;
+    color: white;
+  }
+  .btn.secondary:hover {
+    background: #7f8c8d;
+  }
+  .btn.danger {
+    background: #e74c3c;
+    color: white;
+  }
+  .btn.danger:hover {
+    background: #c0392b;
+  }
+  @media (max-width: 768px) {
+    .stats {
+      flex-direction: column;
+    }
+    .actions {
+      flex-direction: column;
+    }
+  }
+</style>

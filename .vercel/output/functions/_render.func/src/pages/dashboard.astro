@@ -1,0 +1,44 @@
+---
+import { supabaseServer } from "../lib/supabaseServer";
+
+/* Obtener ID desde la cookie (puesta en /api/login) */
+const session = Astro.cookies.get("session")?.value;
+
+/* El middleware ya protege esta ruta */
+/* Aquí solo usamos el ID */
+
+/* Obtener perfil */
+const { data: user } = await supabaseServer
+  .from("users")
+  .select("id, username, email, role")
+  .eq("id", session)
+  .single();
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dashboard</title>
+    <!-- tus estilos intactos -->
+  </head>
+
+  <body>
+    <main class="container">
+      <div class="card">
+        <h1>Bienvenido 👋</h1>
+        <p class="subtitle">Panel de administración del sistema</p>
+
+        <div class="actions">
+          <a href="/company">
+            <button class="btn">Editar Empresa</button>
+          </a>
+
+          <form method="POST" action="/logout">
+            <button class="btn secondary">Cerrar sesión</button>
+          </form>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

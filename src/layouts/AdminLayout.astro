@@ -1,0 +1,85 @@
+---
+import AdminSidebar from "../components/AdminSidebar.astro";
+import { supabase } from "../lib/supabase";
+
+let data = null;
+let errorMsg = null;
+
+try {
+  const { data: companyData, error } = await supabase
+    .from("company_info")
+    .select("*")
+    .single();
+
+  if (error) throw error;
+  data = companyData;
+} catch (err) {
+  errorMsg = err instanceof Error ? err.message : "Error desconocido";
+  console.error("Error fetching company info:", errorMsg);
+}
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Panel Administrativo - {data.nombre}</title>
+    <link rel="icon" href={data.logo} type="image/png" />
+    <style>
+      :global(body) {
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+      }
+      .admin-layout {
+        display: flex;
+        min-height: 100vh;
+      }
+      .sidebar {
+        width: 250px;
+        background: #2c3e50;
+        color: white;
+        padding: 20px;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      }
+      .main-content {
+        flex: 1;
+        padding: 20px;
+        margin-left: 250px;
+      }
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 100%;
+          position: fixed;
+          top: 0;
+          left: -100%;
+          height: 100%;
+          transition: left 0.3s;
+          z-index: 1000;
+        }
+        .sidebar.open {
+          left: 0;
+        }
+        .main-content {
+          margin-left: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="admin-layout">
+      <AdminSidebar />
+      <div class="main-content">
+        <slot />
+      </div>
+    </div>
+  </body>
+  <script is:inline src="https://unpkg.com/lucide@latest"></script>
+  <script is:inline>
+    window.lucide?.createIcons();
+  </script>
+</html>

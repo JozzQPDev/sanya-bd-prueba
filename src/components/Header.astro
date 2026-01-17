@@ -1,0 +1,258 @@
+---
+import HeaderLink from "./HeaderLink.astro";
+import { supabase } from "../lib/supabase";
+
+let data = null;
+let errorMsg = null;
+
+try {
+  const { data: companyData, error } = await supabase
+    .from("company_info")
+    .select("*")
+    .single();
+
+  if (error) throw error;
+  data = companyData;
+} catch (err) {
+  errorMsg = err instanceof Error ? err.message : "Error desconocido";
+  console.error("Error fetching company info:", errorMsg);
+}
+---
+
+<header>
+  <nav>
+    <!-- LOGO + TÍTULO -->
+    <div class="logo">
+      {
+        data && data.logo ? (
+          <img
+            src={data.logo}
+            alt={`Logo de ${data.nombre}`}
+            class="footer-logo"
+            width="180"
+          />
+        ) : (
+          <img
+            src="/placeholder-logo.png"
+            alt="Logo predeterminado"
+            class="footer-logo"
+            width="180"
+          />
+        )
+      }
+      <h2><a href="/">{data ? data.nombre : "Nombre de la Empresa"}</a></h2>
+    </div>
+
+    <!-- LINKS INTERNOS -->
+    <div class="internal-links">
+      <HeaderLink href="/">Inicio</HeaderLink>
+      <HeaderLink href="/login">Login</HeaderLink>
+    </div>
+  </nav>
+</header>
+
+<style>
+  header {
+    margin: 0;
+    padding: 0 2em;
+    background: var(--pure-white);
+    box-shadow: var(--premium-shadow);
+    backdrop-filter: blur(10px);
+    border-bottom: var(--premium-border);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    transition: var(--transition-smooth);
+  }
+
+  header.scrolled {
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 4px 20px rgba(46, 139, 87, 0.1);
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 1.4em;
+    font-weight: 700;
+  }
+
+  h2 a,
+  h2 a.active {
+    text-decoration: none;
+    color: var(--primary-green);
+    transition: var(--transition-smooth);
+  }
+
+  h2 a:hover {
+    color: var(--primary-gold);
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .internal-links {
+    gap: 1em;
+    font-family: "Font Awesome 5 Free", sans-serif;
+    display: flex;
+  }
+
+  nav a {
+    padding: 1.5em 0.5em;
+    color: var(--text-dark);
+    border-bottom: 3px solid transparent;
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--transition-smooth);
+    position: relative;
+  }
+
+  nav a::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background: linear-gradient(
+      90deg,
+      var(--primary-green),
+      var(--primary-gold)
+    );
+    transition: var(--transition-smooth);
+    transform: translateX(-50%);
+  }
+
+  nav a:hover::after,
+  nav a.active::after {
+    width: 100%;
+  }
+
+  nav a.active {
+    color: var(--primary-green);
+    font-weight: 600;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+  }
+
+  /* AUMENTAR TAMAÑO DEL LOGO */
+  .footer-logo {
+    height: 60px;
+    width: auto;
+    margin-top: 5px;
+    border-radius: 50%;
+    transition: var(--transition-smooth);
+    filter: drop-shadow(0 4px 8px rgba(46, 139, 87, 0.2));
+  }
+
+  .footer-logo:hover {
+    transform: rotate(10deg) scale(1.05);
+    filter: drop-shadow(0 6px 12px rgba(46, 139, 87, 0.3));
+  }
+
+  .social-links {
+    display: flex;
+    gap: 1em;
+    font-family: "Font Awesome 5 Free", sans-serif;
+  }
+
+  .social-links a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    background: var(--neutral-light);
+    border-radius: 50%;
+    transition: var(--transition-smooth);
+    border: 2px solid transparent;
+  }
+
+  .social-links a:hover {
+    background: var(--primary-green);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(46, 139, 87, 0.3);
+  }
+
+  /* ÍCONOS */
+  .social-links a i {
+    font-size: 22px;
+    color: var(--text-dark);
+    transition: var(--transition-smooth);
+  }
+
+  .social-links a:hover i {
+    color: var(--pure-white);
+    transform: scale(1.1);
+  }
+
+  @media (max-width: 768px) {
+    header {
+      padding: 0 1em;
+    }
+
+    .internal-links {
+      gap: 1em;
+    }
+
+    nav a {
+      padding: 1em 0.3em;
+      font-size: 0.9em;
+    }
+
+    .footer-logo {
+      height: 60px;
+    }
+
+    .social-links {
+      gap: 0.5em;
+    }
+
+    .social-links a {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .social-links {
+      display: none;
+    }
+
+    .internal-links {
+      flex-direction: column;
+      gap: 0.5em;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--pure-white);
+      box-shadow: var(--premium-shadow);
+      padding: 1em;
+      transform: translateY(-100%);
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition-smooth);
+    }
+
+    .internal-links.active {
+      transform: translateY(0);
+      opacity: 1;
+      visibility: visible;
+    }
+
+    nav {
+      position: relative;
+    }
+  }
+</style>

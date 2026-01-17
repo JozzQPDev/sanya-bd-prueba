@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
-import vercel from '@astrojs/vercel/serverless';
+import vercel from '@astrojs/vercel';
 
 export default defineConfig({
-  output: 'server', // Esto hace que se consulte la DB en cada visita
+  output: 'server', // Consulta la DB en cada visita (SSR)
   adapter: vercel(),
 });

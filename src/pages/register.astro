@@ -1,0 +1,36 @@
+---
+let errorMsg = "";
+
+if (Astro.request.method === "POST") {
+  const form = await Astro.request.formData();
+  const email = form.get("email")?.toString();
+  const password = form.get("password")?.toString();
+  const username = form.get("username")?.toString();
+
+  if (!email || !password || !username) {
+    errorMsg = "Completa todos los campos";
+  } else {
+    const response = await fetch("/api/register", {
+      method: "POST",
+      body: form,
+    });
+
+    if (response.ok) {
+      return Astro.redirect("/login");
+    } else {
+      errorMsg = await response.text();
+    }
+  }
+}
+---
+<form method="POST">
+  <h1>Registro</h1>
+
+  <input name="username" placeholder="Usuario" required />
+  <input name="email" type="email" placeholder="Correo" required />
+  <input name="password" type="password" placeholder="Contraseña" required />
+
+  <button>Registrarse</button>
+
+  {errorMsg && <p style="color:red">{errorMsg}</p>}
+</form>
