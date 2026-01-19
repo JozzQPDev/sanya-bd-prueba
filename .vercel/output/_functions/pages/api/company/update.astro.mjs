@@ -1,19 +1,29 @@
-import { s as supabase } from '../../../chunks/supabase_Ajqi_3IU.mjs';
+import { s as supabaseServer } from '../../../chunks/supabaseServer_C-72eZQB.mjs';
 export { renderers } from '../../../renderers.mjs';
 
 const POST = async ({ request }) => {
-  const data = await request.formData();
-  const { error } = await supabase.from("company_info").update({
-    nombre: data.get("nombre"),
-    direccion: data.get("direccion"),
-    telefono: data.get("telefono"),
-    mail: data.get("mail"),
-    horario: data.get("horario"),
-    logo: data.get("logo") || null
+  const formData = await request.formData();
+  console.log(
+    "FORM DATA:",
+    Object.fromEntries(formData.entries())
+  );
+  const { error } = await supabaseServer.from("company_info").update({
+    nombre: formData.get("nombre"),
+    direccion: formData.get("direccion"),
+    telefono: formData.get("telefono"),
+    mail: formData.get("mail"),
+    horario: formData.get("horario"),
+    logo: formData.get("logo") || null
   }).eq("id", 1);
   if (error) {
-    console.error(error);
+    console.error("SUPABASE ERROR:", error);
     return new Response("Error", { status: 500 });
+  }
+  const { data: result, error: selectError } = await supabaseServer.from("company_info").select("*").eq("id", 1).single();
+  if (selectError) {
+    console.error("SELECT ERROR:", selectError);
+  } else {
+    console.log("UPDATED ROW:", result);
   }
   return new Response("OK", { status: 200 });
 };

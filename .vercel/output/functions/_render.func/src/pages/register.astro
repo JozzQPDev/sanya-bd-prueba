@@ -1,6 +1,4 @@
 ---
-import { supabase } from "../lib/supabase";
-
 let errorMsg = "";
 
 if (Astro.request.method === "POST") {
@@ -12,22 +10,15 @@ if (Astro.request.method === "POST") {
   if (!email || !password || !username) {
     errorMsg = "Completa todos los campos";
   } else {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
+    const response = await fetch("/api/register", {
+      method: "POST",
+      body: form,
     });
 
-    if (error) {
-      errorMsg = error.message;
-    } else {
-      // Guardar usuario en tabla profiles
-      await supabase.from("profiles").insert({
-        id: data.user?.id,
-        email,
-        username,
-      });
-
+    if (response.ok) {
       return Astro.redirect("/login");
+    } else {
+      errorMsg = await response.text();
     }
   }
 }

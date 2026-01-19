@@ -1,2 +1,2 @@
-export { a as page } from '../chunks/generic_B39e_Q3h.mjs';
+export { a as page } from '../chunks/generic_-DnmPHXI.mjs';
 export { renderers } from '../renderers.mjs';

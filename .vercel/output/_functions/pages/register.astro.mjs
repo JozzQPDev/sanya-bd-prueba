@@ -1,7 +1,6 @@
-import { e as createComponent, f as createAstro, m as maybeRenderHead, r as renderTemplate } from '../chunks/astro/server_B1VBhITs.mjs';
+import { e as createComponent, f as createAstro, m as maybeRenderHead, r as renderTemplate } from '../chunks/astro/server_C0MrMJEo.mjs';
 import 'piccolore';
 import 'clsx';
-import { s as supabase } from '../chunks/supabase_Ajqi_3IU.mjs';
 export { renderers } from '../renderers.mjs';
 
 const $$Astro = createAstro();
@@ -17,19 +16,14 @@ const $$Register = createComponent(async ($$result, $$props, $$slots) => {
     if (!email || !password || !username) {
       errorMsg = "Completa todos los campos";
     } else {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password
+      const response = await fetch("/api/register", {
+        method: "POST",
+        body: form
       });
-      if (error) {
-        errorMsg = error.message;
-      } else {
-        await supabase.from("profiles").insert({
-          id: data.user?.id,
-          email,
-          username
-        });
+      if (response.ok) {
         return Astro2.redirect("/login");
+      } else {
+        errorMsg = await response.text();
       }
     }
   }

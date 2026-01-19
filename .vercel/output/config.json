@@ -20,6 +20,22 @@
 			"dest": "_render"
 		},
 		{
+			"src": "^/admin/company/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/admin/orders/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/admin/settings/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/admin/users/?$",
+			"dest": "_render"
+		},
+		{
 			"src": "^/api/company/update/?$",
 			"dest": "_render"
 		},
@@ -28,7 +44,19 @@
 			"dest": "_render"
 		},
 		{
-			"src": "^/company/?$",
+			"src": "^/api/logout/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/api/users/create/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/api/users/([^/]+?)/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/api/users/?$",
 			"dest": "_render"
 		},
 		{

@@ -2,6 +2,7 @@
 import { supabase } from "../lib/supabase";
 import Header from "../components/Header.astro";
 
+
 let data = null;
 let errorMsg = null;
 
@@ -22,7 +23,9 @@ try {
 <head>
   <meta charset="utf-8" />
   <title>{data.nombre}</title>
+  <link rel="icon" href={data.logo} type="image/png" />
 </head>
+
 <Header />
 <body>
 

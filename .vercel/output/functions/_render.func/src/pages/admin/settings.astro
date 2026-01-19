@@ -1,0 +1,31 @@
+---
+import AdminLayout from "../../layouts/AdminLayout.astro";
+import { supabaseServer } from "../../lib/supabaseServer";
+
+const session = Astro.cookies.get("session")?.value;
+const { data: user } = await supabaseServer
+  .from("users")
+  .select("role")
+  .eq("id", session)
+  .single();
+
+if (user?.role !== 'admin') {
+  return Astro.redirect('/dashboard');
+}
+---
+
+<AdminLayout>
+  <main class="container">
+    <h1>Configuración del Sistema</h1>
+    <p>Configuraciones avanzadas del sistema (solo para administradores).</p>
+  </main>
+</AdminLayout>
+
+<style>
+  .container {
+    padding: 20px;
+  }
+  h1 {
+    color: #2c3e50;
+  }
+</style>

@@ -1,7 +1,8 @@
-import { e as createComponent, f as createAstro, k as renderHead, r as renderTemplate } from '../chunks/astro/server_B1VBhITs.mjs';
+import { e as createComponent, f as createAstro, k as renderComponent, r as renderTemplate, m as maybeRenderHead } from '../chunks/astro/server_C0MrMJEo.mjs';
 import 'piccolore';
-import 'clsx';
-import { s as supabaseServer } from '../chunks/supabaseServer_CDOImX3n.mjs';
+import { $ as $$AdminLayout } from '../chunks/AdminLayout_DLMoqZco.mjs';
+import { s as supabaseServer } from '../chunks/supabaseServer_C-72eZQB.mjs';
+/* empty css                                     */
 export { renderers } from '../renderers.mjs';
 
 const $$Astro = createAstro();
@@ -10,7 +11,7 @@ const $$Dashboard = createComponent(async ($$result, $$props, $$slots) => {
   Astro2.self = $$Dashboard;
   const session = Astro2.cookies.get("session")?.value;
   const { data: user } = await supabaseServer.from("users").select("id, username, email, role").eq("id", session).single();
-  return renderTemplate`<html lang="es"> <head><meta charset="UTF-8"><title>Dashboard</title><!-- tus estilos intactos -->${renderHead()}</head> <body> <main class="container"> <div class="card"> <h1>Bienvenido 👋</h1> <p class="subtitle">Panel de administración del sistema</p> <div class="actions"> <a href="/company"> <button class="btn">Editar Empresa</button> </a> <form method="POST" action="/logout"> <button class="btn secondary">Cerrar sesión</button> </form> </div> </div> </main> </body></html>`;
+  return renderTemplate`${renderComponent($$result, "AdminLayout", $$AdminLayout, { "data-astro-cid-3nssi2tu": true }, { "default": async ($$result2) => renderTemplate` ${maybeRenderHead()}<main class="dashboard-main" data-astro-cid-3nssi2tu> <div class="welcome-card" data-astro-cid-3nssi2tu> <h1 data-astro-cid-3nssi2tu>Bienvenido, ${user?.username} 👋</h1> <p class="subtitle" data-astro-cid-3nssi2tu>Panel de administración del sistema</p> </div> <div class="actions" data-astro-cid-3nssi2tu> <a href="/admin/company" data-astro-cid-3nssi2tu> <button class="btn primary" data-astro-cid-3nssi2tu>Editar Empresa</button> </a> <a href="/admin/users" data-astro-cid-3nssi2tu> <button class="btn secondary" data-astro-cid-3nssi2tu>Gestionar Usuarios</button> </a> <form method="POST" action="/api/logout" data-astro-cid-3nssi2tu> <button class="btn danger" data-astro-cid-3nssi2tu>Cerrar sesión</button> </form> </div> </main> ` })} `;
 }, "C:/Paginas con Astro/Pgn - bd-server/src/pages/dashboard.astro", void 0);
 
 const $$file = "C:/Paginas con Astro/Pgn - bd-server/src/pages/dashboard.astro";

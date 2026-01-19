@@ -1,12 +1,12 @@
 import { parse, stringify } from 'devalue';
-import { am as REDIRECT_STATUS_CODES, A as AstroError, an as ActionsReturnedInvalidDataError, D as DEFAULT_404_COMPONENT } from './astro/server_B1VBhITs.mjs';
+import { am as REDIRECT_STATUS_CODES, A as AstroError, an as ActionsReturnedInvalidDataError, D as DEFAULT_404_COMPONENT } from './astro/server_C0MrMJEo.mjs';
 import { escape } from 'html-escaper';
 
 const ACTION_QUERY_PARAMS$1 = {
   actionName: "_action"};
 const ACTION_RPC_ROUTE_PATTERN = "/_actions/[...path]";
 
-const __vite_import_meta_env__ = {"ASSETS_PREFIX": undefined, "BASE_URL": "/", "DEV": false, "MODE": "production", "PROD": true, "PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlranFhb3pvZmlxd21jcnVxcXllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3MDg4MDUsImV4cCI6MjA4MzI4NDgwNX0.Ev1PqgTWs_9m_XecsGC3RtIk_9-1r9x5CZoEC9NSmPs", "PUBLIC_SUPABASE_URL": "https://ikjqaozofiqwmcruqqye.supabase.co", "SITE": undefined, "SSR": true};
+const __vite_import_meta_env__ = {"ASSETS_PREFIX": undefined, "BASE_URL": "/", "DEV": false, "MODE": "production", "PROD": true, "PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_4CecTZnixPFbJo6WxBG42w_xcgP75kn", "PUBLIC_SUPABASE_URL": "https://ikjqaozofiqwmcruqqye.supabase.co", "SITE": undefined, "SSR": true};
 const ACTION_QUERY_PARAMS = ACTION_QUERY_PARAMS$1;
 const codeToStatusMap = {
   // Implemented from IANA HTTP Status Code Registry

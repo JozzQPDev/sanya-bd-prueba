@@ -1,5 +1,6 @@
 ---
-import { supabase } from "../lib/supabase";
+import AdminLayout from "../../layouts/AdminLayout.astro";
+import { supabase } from "../../lib/supabase";
 
 const COMPANY_ID = 1;
 
@@ -15,11 +16,78 @@ if (error) {
 }
 ---
 
-<head>
-  <meta charset="utf-8" />
-  <title>Panel Empresa</title>
-</head>
+<AdminLayout>
+  <main class="container">
+    <form id="companyForm" class="admin-grid">
+      <!-- LOGO -->
+      <div class="logo-card">
+        <div class="logo-preview">
+          {company.logo ? <img src={company.logo} /> : <span>Sin logo</span>}
+        </div>
+        <h1>{company.nombre}</h1>
+      </div>
 
+      <!-- FORM -->
+      <div class="form-card">
+        <div class="fields">
+          <div class="field">
+            <label>Nombre</label>
+            <input name="nombre" value={company.nombre} required />
+          </div>
+
+          <div class="field">
+            <label>Dirección</label>
+            <input name="direccion" value={company.direccion} required />
+          </div>
+
+          <div class="field">
+            <label>Teléfono</label>
+            <input name="telefono" value={company.telefono} required />
+          </div>
+
+          <div class="field">
+            <label>Email</label>
+            <input type="email" name="mail" value={company.mail} required />
+          </div>
+
+          <div class="field full">
+            <label>Horario</label>
+            <input name="horario" value={company.horario} required />
+          </div>
+
+          <div class="field full">
+            <label>URL del Logo</label>
+            <input name="logo" value={company.logo ?? ""} />
+          </div>
+        </div>
+
+        <button class="btn" type="submit">Guardar Cambios</button>
+      </div>
+    </form>
+
+    <script>
+      const form = document.getElementById("companyForm");
+
+      if (form instanceof HTMLFormElement) {
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const res = await fetch("/api/company/update", {
+            method: "POST",
+            body: new FormData(form),
+          });
+
+          if (res.ok) {
+            alert("✅ Datos actualizados correctamente");
+            location.reload();
+          } else {
+            alert("❌ Error al guardar");
+          }
+        });
+      }
+    </script>
+  </main>
+</AdminLayout>
 
 <style>
   :root {
@@ -31,14 +99,10 @@ if (error) {
     --muted: #6b7280;
     --radius: 14px;
   }
-
-  body {
-    background: #f3f4f6;
-  }
-
+  
   .container {
     max-width: 1100px;
-    margin: 140px auto;
+    margin: 20px auto;
     padding: 0 20px;
     font-family: "Inter", system-ui, sans-serif;
   }
@@ -169,74 +233,3 @@ if (error) {
     }
   }
 </style>
-
-<main class="container">
-  <form id="companyForm" class="admin-grid">
-    <!-- LOGO -->
-    <div class="logo-card">
-      <div class="logo-preview">
-        {company.logo ? <img src={company.logo} /> : <span>Sin logo</span>}
-      </div>
-      <h1>{company.nombre}</h1>
-    </div>
-
-    <!-- FORM -->
-    <div class="form-card">
-      <div class="fields">
-        <div class="field">
-          <label>Nombre</label>
-          <input name="nombre" value={company.nombre} required />
-        </div>
-
-        <div class="field">
-          <label>Dirección</label>
-          <input name="direccion" value={company.direccion} required />
-        </div>
-
-        <div class="field">
-          <label>Teléfono</label>
-          <input name="telefono" value={company.telefono} required />
-        </div>
-
-        <div class="field">
-          <label>Email</label>
-          <input type="email" name="mail" value={company.mail} required />
-        </div>
-
-        <div class="field full">
-          <label>Horario</label>
-          <input name="horario" value={company.horario} required />
-        </div>
-
-        <div class="field full">
-          <label>URL del Logo</label>
-          <input name="logo" value={company.logo ?? ""} />
-        </div>
-      </div>
-
-      <button class="btn" type="submit">Guardar Cambios</button>
-    </div>
-  </form>
-
-  <script>
-    const form = document.getElementById("companyForm");
-
-    if (form instanceof HTMLFormElement) {
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        const res = await fetch("/api/company/update", {
-          method: "POST",
-          body: new FormData(form),
-        });
-
-        if (res.ok) {
-          alert("✅ Datos actualizados correctamente");
-          location.reload();
-        } else {
-          alert("❌ Error al guardar");
-        }
-      });
-    }
-  </script>
-</main>
