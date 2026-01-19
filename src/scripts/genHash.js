@@ -1,6 +1,11 @@
 import bcrypt from "bcryptjs";
 
-const password = "admin123";
+const password = process.argv[2] || "admin123";
+const saltRounds = 10;
 
-const hash = await bcrypt.hash(password, 10);
-console.log("HASH:", hash);
+bcrypt.hash(password, saltRounds).then(hash => {
+  console.log(`Password: ${password}`);
+  console.log(`Hash: ${hash}`);
+}).catch(err => {
+  console.error("Error generating hash:", err);
+});

@@ -21,8 +21,8 @@ try {
 
 <head>
   <meta charset="utf-8" />
-  <title>Login - {data.nombre}</title>
-  <link rel="icon" href={data.logo} type="image/png" />
+  <title>Login - {data?.nombre || "Sistema"}</title>
+  <link rel="icon" href={data?.logo || "/favicon.svg"} type="image/png" />
 </head>
 
 <main class="login-container">
@@ -31,7 +31,7 @@ try {
 
     <label>
       Usuario o Email
-      <input name="identifier" required />
+      <input name="identifier" type="text" required />
     </label>
 
     <label>
@@ -40,7 +40,7 @@ try {
     </label>
 
     <button type="submit">Entrar</button>
-    <a class="salirlog" href="/" aria-describedby="salir-desc"> Salir </a>
+    <a class="salirlog" href="/" aria-describedby="salir-desc">Salir</a>
     <span id="salir-desc" class="sr-only">
       Vuelve a la página principal sin iniciar sesión
     </span>
