@@ -57,7 +57,7 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
   cookies.set("session", sessionToken, {
     httpOnly: true,
     sameSite: "strict",
-    secure: process.env.NODE_ENV === "production",
+    secure: import.meta.env.NODE_ENV === "production",
     path: "/",
     maxAge: 86400,
   });
