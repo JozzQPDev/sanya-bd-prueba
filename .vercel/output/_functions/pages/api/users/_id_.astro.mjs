@@ -1,4 +1,4 @@
-import { s as supabaseServer } from '../../../chunks/supabaseServer_C-72eZQB.mjs';
+import { s as supabaseServer } from '../../../chunks/supabaseServer_CDOImX3n.mjs';
 import bcrypt from 'bcryptjs';
 export { renderers } from '../../../renderers.mjs';
 

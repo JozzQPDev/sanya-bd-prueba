@@ -1,7 +1,7 @@
 import { e as createComponent, f as createAstro, m as maybeRenderHead, h as addAttribute, r as renderTemplate, n as renderSlot, k as renderComponent, o as renderHead } from './astro/server_C0MrMJEo.mjs';
 import 'piccolore';
 import 'clsx';
-import { s as supabaseServer } from './supabaseServer_C-72eZQB.mjs';
+import { s as supabaseServer } from './supabaseServer_CDOImX3n.mjs';
 /* empty css                           */
 import { s as supabase } from './supabase_BaTEaPYx.mjs';
 
